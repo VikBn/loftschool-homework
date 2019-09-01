@@ -43,12 +43,27 @@ function map(array, fn, thisArg) {
 function reduce(array, fn, initial) {
     let result = initial <= 0 ? initial : initial || array[0];
 
+    console.log('result', result);
+    console.log('initial', initial);
+
     for (let i = 0; i < array.length; i++) {
+        console.log('beforeResult', result);
         result = fn(result, array[i], i, array);
+        console.log('array[i]', array[i]);
+        console.log('afterResult', result);
+        console.log('------------');
     }
 
     return result;
 }
+
+let arr = [1, 2, 3, 4, 5];
+
+let result = arr.reduce((sum, current) => sum + current, 0);
+let result1 = reduce(arr, (sum, current) => sum + current, 0);
+
+console.log('resultReduce', result);
+console.log('result1Reduce', result1);
 
 /*
  Задание 4:
