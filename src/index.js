@@ -10,12 +10,6 @@ function forEach(array, fn, thisArg) {
     for (let i = 0; i < array.length; i++) {
         fn.call(thisArg, array[i], i, array);
     }
-
-    /* Еще один вариант
-     for (let [index, key] of array.entries()) {
-         fn( key, index, array);
-     }
-     */
 }
 
 /*
@@ -41,29 +35,15 @@ function map(array, fn, thisArg) {
  Посмотрите как работает reduce и повторите это поведение для массива, который будет передан в параметре array
  */
 function reduce(array, fn, initial) {
-    let result = initial <= 0 ? initial : initial || array[0];
+    const currentIndex = initial ? 0 : 1;
+    let result = initial ? initial : array[0];
 
-    console.log('result', result);
-    console.log('initial', initial);
-
-    for (let i = 0; i < array.length; i++) {
-        console.log('beforeResult', result);
+    for (let i = currentIndex; i < array.length; i++) {
         result = fn(result, array[i], i, array);
-        console.log('array[i]', array[i]);
-        console.log('afterResult', result);
-        console.log('------------');
     }
 
     return result;
 }
-
-let arr = [1, 2, 3, 4, 5];
-
-let result = arr.reduce((sum, current) => sum + current, 0);
-let result1 = reduce(arr, (sum, current) => sum + current, 0);
-
-console.log('resultReduce', result);
-console.log('result1Reduce', result1);
 
 /*
  Задание 4:
@@ -77,10 +57,10 @@ function upperProps(obj) {
     let arr = [];
 
     for(let key in obj) {
-        arr.push(key)
+        arr.push(key.toUpperCase())
     }
 
-    return arr.map(item => item.toUpperCase());
+    return arr;
 }
 
 /*
@@ -89,17 +69,22 @@ function upperProps(obj) {
  Напишите аналог встроенного метода slice для работы с массивами
  Посмотрите как работает slice и повторите это поведение для массива, который будет передан в параметре array
  */
-function slice(array, from, to = array.length) {
-    let arr = [];
 
-    let fromMin = from < 0 ? array.length - Math.abs(from) : from;
-    let toMin = to < 0 ? array.length - Math.abs(to) : to;
+function slice(array, from = 0, to = array.length) {
+    let newArr = [];
 
-    for (let i = fromMin; i < toMin; i++) {
-        arr.push(array[i]);
+    const length = array.length;
+    const endValue = to > length ? length : to;
+    const startValue = from < 0 ? length - Math.abs(from) : from;
+
+    let currentIndex = startValue < 0 ? 0 : startValue;
+    let lastIndex = endValue < 0 && Math.abs(endValue) < length ? length - Math.abs(endValue) : endValue;
+
+    for (let i = currentIndex; i < lastIndex; i++) {
+        newArr = [...newArr, array[i]];
     }
 
-    return arr;
+    return newArr;
 }
 
 /*
