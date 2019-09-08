@@ -13,7 +13,7 @@
 function createDivWithText(text) {
     const div = document.createElement('div');
 
-    div.innerHTML = text;
+    div.textContent = text;
 
     return div;
 }
@@ -50,15 +50,8 @@ function prepend(what, where) {
    findAllPSiblings(document.body) // функция должна вернуть массив с элементами div и span т.к. следующим соседом этих элементов является элемент с тегом P
  */
 function findAllPSiblings(where) {
-    let result = [];
 
-    for (let el of where.children) {
-        if (el.nextElementSibling && el.nextElementSibling.tagName === 'P') {
-            result.push(el);
-        }
-    }
-
-    return result;
+    [...where.children()].filter(el => el.nextElementSibling && el.nextElementSibling.tagName === 'P');
 }
 
 /*
@@ -83,7 +76,7 @@ function findError(where) {
 
     for (let child of where.childNodes) {
         if (child.nodeType === 1 && child.tagName !== 'SCRIPT') {
-            result.push(child.innerText);
+            result = [...result, child.innerText];
         }
     }
 
@@ -105,7 +98,6 @@ function findError(where) {
 function deleteTextNodes(where) {
     for (let child of where.childNodes) {
         if (child.nodeType === 3) {
-            console.log(child);
             child.remove();
         }
     }
@@ -123,21 +115,14 @@ function deleteTextNodes(where) {
    должно быть преобразовано в <span><div><b></b></div><p></p></span>
  */
 function deleteTextNodesRecursive(where) {
-    let child = where.firstChild;
-
-    if (child !== null) {
-        while (child) {
-            if (child.nodeType === 3) {
-                child.remove();
-                deleteTextNodesRecursive(child);
-            }
-            child = child.nextSibling;
+    for (let child of where.childNodes) {
+        if (child.nodeType === 3) {
+            child.remove();
+        } else if (child.nodeType === 1 && child.childNodes.length > 0) {
+            deleteTextNodesRecursive(child);
         }
     }
-
 }
-
-deleteTextNodesRecursive(document.body);
 
 /*
  Задание 7 *:
